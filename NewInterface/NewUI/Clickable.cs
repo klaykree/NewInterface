@@ -32,14 +32,41 @@ namespace NewUI
             //Force the ToolTip text to be displayed whether or not the form is active.
             MouseoverName.ShowAlways = true;
 
-            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            BackColor = Color.Transparent;
+            //SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            //BackColor = Color.Transparent;
+        }
+
+        public void ButtonClick(MouseButtons Button)
+        {
+            //Check if it is a html link
+            if(m_oAppDir[0] == (char)0x7F)
+            {
+                System.Diagnostics.Process.Start(m_oAppDir.Remove(0, 1));
+            }
+            else
+            {
+                try
+                {
+                    if(Button == System.Windows.Forms.MouseButtons.Left)
+                    {
+                        //This needs to be in a try catch in case the user cancels the process starting
+                        System.Diagnostics.Process.Start(m_oAppDir + m_oAppName);
+                    }
+                    else if(Button == System.Windows.Forms.MouseButtons.Right)
+                    {
+                        System.Diagnostics.Process.Start("explorer.exe", "/select, \"" + m_oAppDir + m_oAppName + "\"");
+                    }
+                }
+                catch
+                {
+                }
+            }
         }
 
         private void Clickable_MouseClick(object sender, MouseEventArgs e)
         {
             //Check if it is a html link
-            if(m_oAppDir[0] == (char)0x7F)
+            /*if(m_oAppDir[0] == (char)0x7F)
             {
                 System.Diagnostics.Process.Start(m_oAppDir.Remove(0, 1));
             }
@@ -60,7 +87,7 @@ namespace NewUI
                 catch
                 {
                 }
-            }
+            }*/
         }
 
         public void SetImage(ref Bitmap a_oBGImage)

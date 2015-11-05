@@ -208,6 +208,18 @@ namespace NewUI
             ptrMouseHook = SetWindowsHookEx(14, objMouseProcess, GetModuleHandle(objCurrentModule.ModuleName), 0); //Setting Hook of mouse Process for current module
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            if(m.Msg == NativeMethods.WM_SHOWME)
+            {
+                Show();
+                TopMost = true;
+                TopMost = false;
+            }
+
+            base.WndProc(ref m);
+        }
+
         void ExitNI(object sender, EventArgs e)
         {
             Show();
@@ -367,7 +379,7 @@ namespace NewUI
             switch ((int)wp)
             {
                 case WM_LBUTTONDOWN:
-                    MBData.oButton = System.Windows.Forms.MouseButtons.None;
+                    MBData.oButton = System.Windows.Forms.MouseButtons.Left;
                     MBData.bDown = true;
                     break;
                 case WM_RBUTTONDOWN:
@@ -391,7 +403,7 @@ namespace NewUI
                     }
                     break;
                 case WM_LBUTTONUP:
-                    MBData.oButton = System.Windows.Forms.MouseButtons.None;
+                    MBData.oButton = System.Windows.Forms.MouseButtons.Left;
                     MBData.bDown = false;
                     break;
                 case WM_RBUTTONUP:
@@ -431,25 +443,16 @@ namespace NewUI
 
                 MouseButtonData oButtonData = AnyMouseButtonPressed(wp, objMouseInfo.mouseData);
 
-                if (oButtonData.oButton == System.Windows.Forms.MouseButtons.None)
-                {
-                    return CallNextHookEx(ptrMouseHook, nCode, wp, lp);
-                }
-
                 if (m_bCaptureAppkey)
                 {
                     SetAppKey(oButtonData.oButton);
                     m_oAppKey = (int)oButtonData.oButton;
-
-                    //return CallNextHookEx(ptrHook, nCode, wp, lp);
                 }
 
                 if (m_bCaptureTimekey)
                 {
                     SetTimeKey(oButtonData.oButton);
                     m_oTimeKey = (int)oButtonData.oButton;
-
-                    //return CallNextHookEx(ptrHook, nCode, wp, lp);
                 }
 
                 bool bPressedAppkey = false;
@@ -493,6 +496,23 @@ namespace NewUI
                     }
                 }
 
+                if(m_bShowingApps)
+                {
+                    for(int i = 0 ; i < m_oQuickSlots.Count ; ++i)
+                    {
+                        if(oButtonData.bDown
+                            && (oButtonData.oButton == System.Windows.Forms.MouseButtons.Left || oButtonData.oButton == System.Windows.Forms.MouseButtons.Right)
+                            && objMouseInfo.pt.x > (int)m_oQuickSlots[i].m_XPos
+                            && objMouseInfo.pt.x < (int)m_oQuickSlots[i].m_XPos + m_oQuickSlots[i].Width
+                            && objMouseInfo.pt.y > (int)m_oQuickSlots[i].m_YPos
+                            && objMouseInfo.pt.y < (int)m_oQuickSlots[i].m_YPos + m_oQuickSlots[i].Height)
+                        {
+                            m_oQuickSlots[i].ButtonClick(oButtonData.oButton);
+                            break;
+                        }
+                    }
+                }
+
                 if ((m_bDisableAppKey && bPressedAppkey) || (m_bDisableTimeKey && bPressedTimekey))
                 {
                     return (IntPtr)1;
@@ -505,7 +525,6 @@ namespace NewUI
         void SetAppKey(Keys a_oKey)
         {
             m_XDoc.Element("NI").Element("Options").Element("AppHotkey").Value = "K" + ((int)a_oKey).ToString();
-            //m_XDoc["NI"]["Options"]["AppHotkey"].InnerText = ((int)a_oKeys).ToString();
 
             m_XDoc.Save(m_sFileDir);
 
@@ -520,7 +539,6 @@ namespace NewUI
         void SetAppKey(MouseButtons a_oButton)
         {
             m_XDoc.Element("NI").Element("Options").Element("AppHotkey").Value = "M" + ((int)a_oButton).ToString();
-            //m_XDoc["NI"]["Options"]["AppHotkey"].InnerText = ((int)a_oKeys).ToString();
 
             m_XDoc.Save(m_sFileDir);
 
@@ -532,7 +550,6 @@ namespace NewUI
         void SetTimeKey(Keys a_oKey)
         {
             m_XDoc.Element("NI").Element("Options").Element("TimeHotkey").Value = "K" + ((int)a_oKey).ToString();
-            //m_XDoc["NI"]["Options"]["TimeHotkey"].InnerText = ((int)a_oKeys).ToString();
 
             m_XDoc.Save(m_sFileDir);
 
@@ -547,7 +564,6 @@ namespace NewUI
         void SetTimeKey(MouseButtons a_oButton)
         {
             m_XDoc.Element("NI").Element("Options").Element("TimeHotkey").Value = "M" + ((int)a_oButton).ToString();
-            //m_XDoc["NI"]["Options"]["TimeHotkey"].InnerText = ((int)a_oKeys).ToString();
 
             m_XDoc.Save(m_sFileDir);
 
@@ -656,9 +672,6 @@ namespace NewUI
                     m_dY = 0;
                 }
 
-                //NewLoc.X += (int)(Math.Cos((double)Runtime.Milliseconds) * 50);
-                //NewLoc.Y += (int)(Math.Sin((double)Runtime.Milliseconds) * 50);
-
                 m_dX -= m_fDeltaTime;
                 m_dY -= m_fDeltaTime;
 
@@ -685,60 +698,6 @@ namespace NewUI
 
                 for (int i = 0 ; i < m_oQuickSlots.Count ; ++i)
                 {
-                    //Get the direction from the current position to the desired position
-                    /*oDir.X = m_oPoints[i].X - (m_oQuickSlots[i].Location.X + (m_oQuickSlots[i].Width >> 1));
-                    oDir.Y = m_oPoints[i].Y - (m_oQuickSlots[i].Location.Y + (m_oQuickSlots[i].Height >> 1));
-
-                    int iXDisToMove;
-                    int iYDisToMove;
-
-                    if(oDir.X > Speed.Value || oDir.X < -Speed.Value)
-                    {
-                        iXDisToMove = oDir.X / Speed.Value;
-                    }
-                    else
-                    {
-                        if (oDir.X > 0)
-                        {
-                            iXDisToMove = 1;
-                        }
-                        else if (oDir.X < 0)
-                        {
-                            iXDisToMove = -1;
-                        }
-                        else
-                        {
-                            iXDisToMove = 0;
-                        }
-                    }
-
-                    if(oDir.Y > Speed.Value || oDir.Y < -Speed.Value)
-                    {
-                        iYDisToMove = oDir.Y / Speed.Value;
-                    }
-                    else
-                    {
-                        if (oDir.Y > 0)
-                        {
-                            iYDisToMove = 1;
-                        }
-                        else if (oDir.Y < 0)
-                        {
-                            iYDisToMove = -1;
-                        }
-                        else
-                        {
-                            iYDisToMove = 0;
-                        }
-                    }
-
-                    oNewLoc = m_oQuickSlots[i].Location;
-                    oNewLoc.X += iXDisToMove;
-                    oNewLoc.Y += iYDisToMove;
-                    m_oQuickSlots[i].Location = oNewLoc;*/
-
-                    //m_oQuickSlots[i].m_XPos = Lerp(m_oQuickSlots[i].m_XPos, m_oPoints[i].X - (m_oQuickSlots[i].Width >> 1), Speed.Value / 20.0f);
-                    //m_oQuickSlots[i].m_YPos = Lerp(m_oQuickSlots[i].m_YPos, m_oPoints[i].Y - (m_oQuickSlots[i].Height >> 1), Speed.Value / 20.0f);
                     m_oQuickSlots[i].m_XPos = Lerp(m_oQuickSlots[i].m_XPos, m_oPoints[i].X - (m_oQuickSlots[i].Width >> 1), m_fDeltaTime * Speed.Value);
                     m_oQuickSlots[i].m_YPos = Lerp(m_oQuickSlots[i].m_YPos, m_oPoints[i].Y - (m_oQuickSlots[i].Height >> 1), m_fDeltaTime * Speed.Value);
                     m_oQuickSlots[i].Location = new Point(Convert.ToInt32(m_oQuickSlots[i].m_XPos), Convert.ToInt32(m_oQuickSlots[i].m_YPos));
@@ -787,7 +746,7 @@ namespace NewUI
 
         void AddApp(string a_sFilePath, bool a_bAddToXml)
         {
-            //if (Directory.Exists(a_sFilePath) || File.Exists(a_sFilePath))
+            if(Directory.Exists(a_sFilePath) || File.Exists(a_sFilePath))
             {
                 //Create a new clickable item
                 Clickable oNewQuickslot = new Clickable();
@@ -800,9 +759,9 @@ namespace NewUI
 
                     if(oAttributes == FileAttributes.Directory || oAttributes == (FileAttributes.Directory | FileAttributes.ReadOnly))
                     {
-                        Bitmap newImage = new Bitmap(Properties.Resources.Folder, new System.Drawing.Size(32, 32));
+                        Bitmap NewImage = new Bitmap(Properties.Resources.Folder, new System.Drawing.Size(32, 32));
 
-                        oNewQuickslot.SetImage(ref newImage);
+                        oNewQuickslot.SetImage(ref NewImage);
                     }
                     else
                     {
@@ -857,7 +816,10 @@ namespace NewUI
         void AddWebsite(string a_sURL, bool a_bAddToXml)
         {
             Uri url = new Uri(a_sURL);
+            string http = url.Scheme;
             string html = string.Empty;
+
+            Console.WriteLine(http);
 
             using (MyClient oWebClient = new MyClient())
             {
@@ -891,11 +853,11 @@ namespace NewUI
                             {
                                 if (sFavIconURL[0] == '/' && sFavIconURL[1] == '/')
                                 {
-                                    sFavIconURL = @"http:" + sFavIconURL;
+                                    sFavIconURL = http + ":" + sFavIconURL;
                                 }
                                 else if (sFavIconURL[0] == '/')
                                 {
-                                    sFavIconURL = @"http://" + url.Host + sFavIconURL;
+                                    sFavIconURL = http + @"://" + url.Host + sFavIconURL;
                                 }
                             }
 
@@ -910,7 +872,7 @@ namespace NewUI
 
             if (!bIconFound)
             {
-                sFavIconURL = @"http://" + url.Host + @"/favicon.ico";
+                sFavIconURL = http + @"://" + url.Host + @"/favicon.ico";
                 using (MyClient oClient = new MyClient())
                 {
                     oClient.HeadOnly = true;
@@ -952,7 +914,7 @@ namespace NewUI
                 {
                     try
                     {
-                        oIconData = oWebClient.DownloadData(@"http://getfavicon.appspot.com/" + @"http://" + url.Host + "?defaulticon=none");
+                        oIconData = oWebClient.DownloadData(@"http://getfavicon.appspot.com/" + http + @"://" + url.Host + "?defaulticon=none");
                         bIconFound = true;
                     }
                     catch
@@ -967,12 +929,19 @@ namespace NewUI
                 Icon oFavIcon;
                 using(MemoryStream ms = new MemoryStream(oIconData))
                 {
-                    Bitmap TempBmp = new Bitmap(ms);
-                    TempBmp = new Bitmap(TempBmp, new Size(32, 32));
-                    oFavIcon = Icon.FromHandle(TempBmp.GetHicon());
-                }
+                    try
+                    {
+                        Bitmap TempBmp = new Bitmap(ms);
+                        TempBmp = new Bitmap(TempBmp, new Size(32, 32));
+                        oFavIcon = Icon.FromHandle(TempBmp.GetHicon());
 
-                NewImage = oFavIcon.ToBitmap();
+                        NewImage = oFavIcon.ToBitmap();
+                    }
+                    catch
+                    {
+                        NewImage = new Bitmap(Properties.Resources.Internet, new System.Drawing.Size(32, 32));
+                    }
+                }
             }
             else
             {

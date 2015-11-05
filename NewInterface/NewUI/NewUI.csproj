@@ -114,6 +114,7 @@
     <Compile Include="HtmlAgility\MixedCodeDocumentTextFragment.cs" />
     <Compile Include="HtmlAgility\NameValuePair.cs" />
     <Compile Include="HtmlAgility\NameValuePairList.cs" />
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

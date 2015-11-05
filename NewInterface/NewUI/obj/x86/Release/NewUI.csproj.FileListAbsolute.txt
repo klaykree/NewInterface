@@ -19,3 +19,14 @@ C:\Users\Kree\Desktop\Modern General\Work\NewUI\NewUI\NewUI\obj\x86\Release\NewU
 C:\Users\Kree\Desktop\Modern General\Work\NewUI\NewUI\NewUI\obj\x86\Release\NewUI.Properties.Resources.resources
 C:\Users\Kree\Desktop\Modern General\Work\NewUI\NewUI\NewUI\obj\x86\Release\NewUI.csproj.GenerateResource.Cache
 C:\Users\Kree\Desktop\Modern General\Work\NewUI\NewUI\NewUI\obj\x86\Release\NewUI.AddSiteDialog.resources
+C:\Users\Kree\Desktop\NewInterface\NewInterface\NewUI\obj\x86\Release\NewUI.exe
+C:\Users\Kree\Desktop\NewInterface\NewInterface\NewUI\obj\x86\Release\NewUI.pdb
+C:\Users\Kree\Desktop\NewInterface\NewInterface\NewUI\bin\Release\NewUI.exe
+C:\Users\Kree\Desktop\NewInterface\NewInterface\NewUI\bin\Release\NewUI.pdb
+C:\Users\Kree\Desktop\NewInterface\NewInterface\NewUI\obj\x86\Release\NewUI.csprojResolveAssemblyReference.cache
+C:\Users\Kree\Desktop\NewInterface\NewInterface\NewUI\obj\x86\Release\NewUI.AddSiteDialog.resources
+C:\Users\Kree\Desktop\NewInterface\NewInterface\NewUI\obj\x86\Release\NewUI.Clickable.resources
+C:\Users\Kree\Desktop\NewInterface\NewInterface\NewUI\obj\x86\Release\NewUI.Clock.resources
+C:\Users\Kree\Desktop\NewInterface\NewInterface\NewUI\obj\x86\Release\NewUI.UI.resources
+C:\Users\Kree\Desktop\NewInterface\NewInterface\NewUI\obj\x86\Release\NewUI.Properties.Resources.resources
+C:\Users\Kree\Desktop\NewInterface\NewInterface\NewUI\obj\x86\Release\NewUI.csproj.GenerateResource.Cache
