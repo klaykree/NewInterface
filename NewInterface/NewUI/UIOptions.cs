@@ -45,7 +45,7 @@ namespace NewUI
         public struct MSLLHOOKSTRUCT
         {
             public POINT pt;
-            public int mouseData; // be careful, this must be ints, not uints (was wrong before I changed it...). regards, cmew.
+            public int mouseData;
             public int flags;
             public int time;
             public UIntPtr dwExtraInfo;
@@ -908,7 +908,7 @@ namespace NewUI
                 bIconFound = false;
             }
 
-            if(!bIconFound)
+            /*if(!bIconFound)
             {
                 using (MyClient oWebClient = new MyClient())
                 {
@@ -921,7 +921,7 @@ namespace NewUI
                     {
                     }
                 }
-            }
+            }*/
 
             Bitmap NewImage = null;
             if(bIconFound && oIconData.Length > 0)
@@ -1526,7 +1526,7 @@ namespace NewUI
 
         void AddPointsToMemberList(ref List<Point> a_oAdditionalPoints)
         {
-            for (int i = 0 ; i < a_oAdditionalPoints.Count ; ++i)
+            for(int i = 0 ; i < a_oAdditionalPoints.Count ; ++i)
             {
                 m_oPoints.Add(a_oAdditionalPoints[i]);
             }
@@ -1540,7 +1540,7 @@ namespace NewUI
             fontDialog1.Font = m_oClock.ClockLabel.Font;
             fontDialog1.Color = m_oClock.ClockLabel.ForeColor;
 
-            if (fontDialog1.ShowDialog() != DialogResult.Cancel)
+            if(fontDialog1.ShowDialog() != DialogResult.Cancel)
             {
                 m_oClock.ClockLabel.Font = fontDialog1.Font;
                 m_oClock.ClockLabel.ForeColor = fontDialog1.Color;
@@ -1559,7 +1559,7 @@ namespace NewUI
         {
             AddSiteDialog oAddSiteDialog = new AddSiteDialog();
 
-            if (oAddSiteDialog.ShowDialog(this) == DialogResult.OK)
+            if(oAddSiteDialog.ShowDialog(this) == DialogResult.OK)
             {
                 AddWebsite(oAddSiteDialog.SiteText.Text, true);
             }
@@ -1580,7 +1580,7 @@ namespace NewUI
 
         private void Diamond_CheckedChanged(object sender, EventArgs e)
         {
-            if (m_bAllowRadialChange)
+            if(m_bAllowRadialChange)
             {
                 if(Diamond.Checked)
                 {
@@ -1592,7 +1592,7 @@ namespace NewUI
 
         private void Circle_CheckedChanged(object sender, EventArgs e)
         {
-            if (m_bAllowRadialChange)
+            if(m_bAllowRadialChange)
             {
                 if(Circle.Checked)
                 {
